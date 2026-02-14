@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+</head>
+<body>
+  <h2>🔧 Teste de Comunicação</h2>
+  <button onclick="testar()">Testar Conexão</button>
+  <button onclick="testarPendentes()">Buscar Pendentes</button>
+  <pre id="resultado" style="background:#f1f5f9; padding:16px; border-radius:8px; margin-top:16px;"></pre>
+
+  <script>
+    function log(msg) {
+      document.getElementById('resultado').innerText += msg + '\n';
+    }
+
+    function testar() {
+      log('🔄 Chamando testarConexao()...');
+      google.script.run
+        .withSuccessHandler(function(res) {
+          log('✅ Sucesso: ' + JSON.stringify(res, null, 2));
+        })
+        .withFailureHandler(function(err) {
+          log('❌ Erro: ' + err.message);
+        })
+        .testarConexao();
+    }
+
+    function testarPendentes() {
+      log('🔄 Chamando getOrdensPendentes()...');
+      google.script.run
+        .withSuccessHandler(function(dados) {
+          if (dados && dados.erro) {
+            log('❌ Erro retornado pelo backend: ' + dados.mensagem);
+            if (dados.stack) log('Stack: ' + dados.stack);
+          } else {
+            log('✅ Sucesso! Retornou ' + dados.length + ' registros.');
+            log('Primeiro registro: ' + JSON.stringify(dados[0], null, 2));
+          }
+        })
+        .withFailureHandler(function(err) {
+          log('❌ Falha na comunicação: ' + err.message);
+        })
+        .getOrdensPendentes();
+    }
+  </script>
+</body>
+</html>

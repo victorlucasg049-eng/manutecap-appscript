@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #fff7ed;
+      --surface: #ffffff;
+      --border: #fed7aa;
+      --border-soft: #f1f5f9;
+      --text: #1c1917;
+      --text-muted: #78716c;
+      --accent: #ea580c;
+      --accent-light: #fff7ed;
+      --accent-dark: #c2410c;
+      --purple: #7c3aed;
+      --green: #16a34a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex; align-items: flex-start; justify-content: center;
+    }
+    .wrapper { width: 100%; max-width: 680px; }
+
+    .page-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
+    }
+    .page-back {
+      width: 40px; height: 40px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); cursor: pointer; text-decoration: none; transition: all 0.2s;
+    }
+    .page-back:hover { background: var(--accent); color: white; border-color: var(--accent); }
+    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+    .page-title p  { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    .form-card {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(234,88,12,0.08);
+    }
+    .form-section { padding: 24px; border-bottom: 1px solid var(--bg); }
+    .form-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-row { display: grid; gap: 16px; }
+    .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .field-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 7px; }
+    label .req { color: var(--accent); }
+    input, select, textarea {
+      width: 100%; padding: 11px 14px; border: 1.5px solid #e5e7eb;
+      border-radius: 10px; font-family: inherit; font-size: 14px;
+      color: var(--text); background: var(--surface); transition: all 0.2s; outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(234,88,12,0.1);
+    }
+    textarea { resize: vertical; min-height: 88px; }
+
+    /* FREQUÊNCIA VISUAL */
+    .freq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .freq-option { display: none; }
+    .freq-label {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 12px 8px; border: 1.5px solid #e5e7eb; border-radius: 10px;
+      cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-muted);
+      transition: all 0.2s; text-align: center;
+    }
+    .freq-label:hover { border-color: var(--accent); color: var(--accent); }
+    .freq-option:checked + .freq-label {
+      border-color: var(--accent); background: #fff7ed; color: var(--accent);
+    }
+    .freq-label i { font-size: 16px; }
+
+    /* CHECKLIST */
+    .checklist-wrap {
+      background: #f8fafc; border-radius: 14px; padding: 20px;
+    }
+    .checklist-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+    }
+    .checklist-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .btn-ai {
+      padding: 8px 16px; border: none; border-radius: 8px;
+      background: linear-gradient(135deg, var(--purple), #9333ea);
+      color: white; font-family: inherit; font-size: 12px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+    .btn-ai:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(124,58,237,0.3); }
+    .btn-ai:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .checklist-item {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    }
+    .checklist-item input[type="text"] {
+      flex: 1; padding: 9px 12px; border: 1.5px solid #e5e7eb;
+      border-radius: 8px; font-size: 13px;
+    }
+    .checklist-item input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
+    .btn-remove {
+      width: 32px; height: 32px; border: none; border-radius: 8px;
+      background: #fee2e2; color: #dc2626; cursor: pointer; flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .btn-remove:hover { background: #dc2626; color: white; }
+    .btn-add-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border: 1.5px dashed #cbd5e1; border-radius: 8px;
+      background: none; color: var(--text-muted); font-family: inherit;
+      font-size: 12px; font-weight: 600; cursor: pointer; width: 100%;
+      justify-content: center; margin-top: 4px; transition: all 0.2s;
+    }
+    .btn-add-item:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+    .form-actions {
+      display: flex; gap: 12px; justify-content: flex-end;
+      padding: 20px 24px; background: var(--bg); border-top: 1px solid var(--border);
+    }
+    .btn {
+      padding: 11px 24px; border: none; border-radius: 10px;
+      font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }
+    .btn-ghost { background: var(--surface); border: 1.5px solid #e5e7eb; color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--text); color: white; border-color: var(--text); }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(234,88,12,0.3); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text); color: white; padding: 14px 24px; border-radius: 12px;
+      font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999; white-space: nowrap; max-width: 90vw;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #15803d; }
+    .toast.error   { background: #b91c1c; }
+
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 1000;
+    }
+    .spinner { width: 44px; height: 44px; border: 3px solid #e5e7eb; border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .loading-text { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 500px) {
+      .field-row.cols-2 { grid-template-columns: 1fr; }
+      .field-row.cols-3 { grid-template-columns: repeat(2, 1fr); }
+      .freq-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingText">Aguarde...</div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <div class="wrapper">
+    <div class="page-header">
+      <a href="<?= baseUrl ?>" class="page-back"><i class="fas fa-arrow-left"></i></a>
+      <div class="page-title">
+        <h1><i class="fas fa-calendar-check" style="color:var(--accent); margin-right:8px;"></i>Agendar Preventiva</h1>
+        <p>Configure a manutenção preventiva com checklist inteligente</p>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <!-- LOCALIZAÇÃO -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-map-marker-alt"></i> Localização</div>
+        <div class="field-row cols-2">
+          <div class="field">
+            <label>Setor <span class="req">*</span></label>
+            <select id="setor" required>
+              <option value="">Selecione...</option>
+              <option>Recepção</option><option>Quarto</option><option>Suíte</option>
+              <option>Banheiro</option><option>Cozinha</option><option>Restaurante</option>
+              <option>Área de Lazer</option><option>Piscina</option><option>Spa</option>
+              <option>Academia</option><option>Salão de Eventos</option><option>Estacionamento</option>
+              <option>Elétrica</option><option>Hidráulica</option><option>Ar Condicionado</option>
+              <option>TV/Internet</option><option>Móveis</option><option>Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Local Específico <span class="req">*</span></label>
+            <input type="text" id="local" required placeholder="Ex: Quarto 203, Casa de máquinas...">
+          </div>
+        </div>
+        <div class="field">
+          <label>Descrição da Tarefa <span class="req">*</span></label>
+          <textarea id="descricao" required placeholder="Ex: Limpeza e verificação do filtro do ar-condicionado split..."></textarea>
+        </div>
+      </div>
+
+      <!-- CONFIGURAÇÃO -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-sliders-h"></i> Configuração</div>
+        <div class="field-row cols-2">
+          <div class="field">
+            <label>Prioridade <span class="req">*</span></label>
+            <select id="prioridade" required>
+              <option value="Baixa">Baixa</option>
+              <option value="Média" selected>Média</option>
+              <option value="Alta">Alta</option>
+              <option value="Urgente">Urgente</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Data de Início (opcional)</label>
+            <input type="date" id="dataInicio">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Frequência <span class="req">*</span></label>
+          <div class="freq-grid">
+            <div>
+              <input type="radio" name="freq" id="f-semanal" value="Semanal" class="freq-option">
+              <label for="f-semanal" class="freq-label"><i class="fas fa-calendar-day"></i>Semanal</label>
+            </div>
+            <div>
+              <input type="radio" name="freq" id="f-quinzenal" value="Quinzenal" class="freq-option">
+              <label for="f-quinzenal" class="freq-label"><i class="fas fa-calendar-week"></i>Quinzenal</label>
+            </div>
+            <div>
+              <input type="radio" name="freq" id="f-mensal" value="Mensal" class="freq-option" checked>
+              <label for="f-mensal" class="freq-label"><i class="fas fa-calendar-alt"></i>Mensal</label>
+            </div>
+            <div>
+              <input type="radio" name="freq" id="f-bimestral" value="Bimestral" class="freq-option">
+              <label for="f-bimestral" class="freq-label"><i class="fas fa-calendar"></i>Bimestral</label>
+            </div>
+            <div>
+              <input type="radio" name="freq" id="f-semestral" value="Semestral" class="freq-option">
+              <label for="f-semestral" class="freq-label"><i class="fas fa-calendar-check"></i>Semestral</label>
+            </div>
+            <div>
+              <input type="radio" name="freq" id="f-anual" value="Anual" class="freq-option">
+              <label for="f-anual" class="freq-label"><i class="fas fa-calendar-times"></i>Anual</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-check-double"></i> Checklist de Verificação</div>
+        <div class="checklist-wrap">
+          <div class="checklist-header">
+            <div class="checklist-title"><i class="fas fa-tasks" style="color:var(--accent);"></i> Itens</div>
+            <button type="button" class="btn-ai" onclick="gerarChecklistGemini()" id="btnAI">
+              <i class="fas fa-robot"></i> Gerar com IA
+            </button>
+          </div>
+          <div id="checklistContainer"></div>
+          <button type="button" class="btn-add-item" onclick="adicionarItem('')">
+            <i class="fas fa-plus"></i> Adicionar item
+          </button>
+        </div>
+      </div>
+
+      <!-- OBSERVAÇÕES -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-sticky-note"></i> Observações</div>
+        <div class="field">
+          <textarea id="observacoes" placeholder="Informações adicionais, equipamentos necessários, precauções..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="window.location.href='<?= baseUrl ?>'">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button class="btn btn-primary" id="submitBtn" onclick="salvarPreventiva()">
+          <i class="fas fa-calendar-plus"></i> Agendar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function adicionarItem(valor) {
+      const container = document.getElementById('checklistContainer');
+      const div = document.createElement('div');
+      div.className = 'checklist-item';
+      const safeVal = String(valor || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      div.innerHTML = `
+        <input type="text" class="item-text" value="${safeVal}" placeholder="Descreva a tarefa de verificação...">
+        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>`;
+      container.appendChild(div);
+      if (valor === '') div.querySelector('input').focus();
+    }
+
+    function gerarChecklistGemini() {
+      const setor = document.getElementById('setor').value;
+      const local = document.getElementById('local').value;
+      const descricao = document.getElementById('descricao').value;
+      if (!setor || !local || !descricao) {
+        showToast('Preencha setor, local e descrição primeiro.', 'error');
+        return;
+      }
+      const btnAI = document.getElementById('btnAI');
+      btnAI.disabled = true;
+      btnAI.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+      mostrarLoading(true, 'Gerando checklist com IA...');
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          mostrarLoading(false);
+          btnAI.disabled = false;
+          btnAI.innerHTML = '<i class="fas fa-robot"></i> Gerar com IA';
+          if (res.success && res.checklist && res.checklist.length) {
+            document.getElementById('checklistContainer').innerHTML = '';
+            res.checklist.forEach(item => adicionarItem(item));
+            showToast(`✨ ${res.checklist.length} itens gerados pela IA!`, 'success');
+          } else {
+            showToast('Erro ao gerar checklist.', 'error');
+          }
+        })
+        .withFailureHandler(function(err) {
+          mostrarLoading(false);
+          btnAI.disabled = false;
+          btnAI.innerHTML = '<i class="fas fa-robot"></i> Gerar com IA';
+          showToast('Erro: ' + err.message, 'error');
+        })
+        .gerarChecklistComGemini(setor, local, descricao);
+    }
+
+    function salvarPreventiva() {
+      const setor = document.getElementById('setor').value;
+      const local = document.getElementById('local').value;
+      const descricao = document.getElementById('descricao').value;
+      const frequencia = document.querySelector('input[name="freq"]:checked')?.value;
+
+      if (!setor || !local || !descricao || !frequencia) {
+        showToast('Preencha todos os campos obrigatórios.', 'error');
+        return;
+      }
+
+      const itens = Array.from(document.querySelectorAll('.item-text'))
+        .map(i => i.value.trim()).filter(v => v);
+
+      if (itens.length === 0 && !confirm('Nenhum item de checklist adicionado. Deseja continuar assim mesmo?')) return;
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      mostrarLoading(true, 'Agendando preventiva...');
+
+      const dados = {
+        setor, local, descricao,
+        prioridade: document.getElementById('prioridade').value,
+        frequencia,
+        dataInicio: document.getElementById('dataInicio').value || null,
+        checklist: itens,
+        observacoes: document.getElementById('observacoes').value
+      };
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          mostrarLoading(false);
+          btn.disabled = false;
+          if (res.success) {
+            showToast(res.message, 'success');
+            setTimeout(() => window.location.href = '<?= baseUrl ?>', 2000);
+          } else {
+            showToast(res.message || 'Erro ao agendar.', 'error');
+          }
+        })
+        .withFailureHandler(function(err) {
+          mostrarLoading(false);
+          btn.disabled = false;
+          showToast('Erro: ' + err.message, 'error');
+        })
+        .salvarPreventiva(dados);
+    }
+
+    function mostrarLoading(show, texto) {
+      document.getElementById('loading').style.display = show ? 'flex' : 'none';
+      if (texto) document.getElementById('loadingText').textContent = texto;
+    }
+
+    function showToast(msg, tipo = 'default') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast show ${tipo}`;
+      setTimeout(() => t.classList.remove('show'), 4000);
+    }
+
+    // Inicia com um item vazio
+    window.onload = () => adicionarItem('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #16a34a;
+      --accent-light: #dcfce7;
+      --accent-dark: #15803d;
+      --red: #dc2626;
+      --orange: #ea580c;
+      --blue: #2563eb;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .wrapper {
+      width: 100%; max-width: 600px;
+    }
+
+    /* HEADER */
+    .page-header {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 28px;
+    }
+    .page-back {
+      width: 40px; height: 40px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .page-back:hover { background: var(--text); color: white; border-color: var(--text); }
+    .page-title h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+    .page-title p  { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* CARD DO FORMULÁRIO */
+    .form-card {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    .form-section {
+      padding: 24px;
+      border-bottom: 1px solid var(--bg);
+    }
+    .form-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* CAMPOS */
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-row { display: grid; gap: 16px; }
+    .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+    label .req { color: var(--red); }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface);
+      transition: all 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+    }
+    input.error, select.error, textarea.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+    textarea { resize: vertical; min-height: 96px; }
+
+    /* PRIORIDADE VISUAL */
+    .priority-picker {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .priority-option { display: none; }
+    .priority-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .priority-label:hover { border-color: var(--p-color); color: var(--p-color); }
+    .priority-option:checked + .priority-label {
+      border-color: var(--p-color);
+      background: var(--p-bg);
+      color: var(--p-color);
+    }
+    .priority-label i { font-size: 18px; }
+    .pl-baixa  { --p-color: #16a34a; --p-bg: #dcfce7; }
+    .pl-media  { --p-color: #2563eb; --p-bg: #dbeafe; }
+    .pl-alta   { --p-color: #ea580c; --p-bg: #ffedd5; }
+    .pl-urgente { --p-color: #dc2626; --p-bg: #fee2e2; }
+
+    /* FOTO */
+    .photo-drop {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--bg);
+    }
+    .photo-drop:hover { border-color: var(--accent); background: var(--accent-light); }
+    .photo-drop.has-photo { border-style: solid; border-color: var(--accent); }
+    .photo-drop i { font-size: 28px; color: var(--text-muted); margin-bottom: 8px; }
+    .photo-drop p { font-size: 13px; color: var(--text-muted); }
+    .photo-drop small { font-size: 11px; color: var(--text-muted); opacity: 0.7; }
+    #preview { max-width: 100%; max-height: 180px; border-radius: 10px; margin-top: 12px; display: none; }
+
+    /* ACTIONS */
+    .form-actions {
+      display: flex; gap: 12px; justify-content: flex-end;
+      padding: 20px 24px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .btn {
+      padding: 11px 24px;
+      border: none; border-radius: 10px;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-ghost { background: var(--surface); border: 1.5px solid var(--border); color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--text); color: white; border-color: var(--text); }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(22,163,74,0.3); }
+    .btn-primary:disabled { background: #86efac; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text); color: white;
+      padding: 14px 24px; border-radius: 12px;
+      font-size: 14px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999; white-space: nowrap; max-width: 90vw;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #15803d; }
+    .toast.error   { background: #b91c1c; }
+
+    /* LOADING */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(4px);
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px; z-index: 1000;
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+
+    @media (max-width: 480px) {
+      .field-row.cols-2 { grid-template-columns: 1fr; }
+      .priority-picker { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Salvando ordem...</div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <div class="wrapper">
+    <div class="page-header">
+      <a href="<?= baseUrl ?>" class="page-back"><i class="fas fa-arrow-left"></i></a>
+      <div class="page-title">
+        <h1><i class="fas fa-clipboard-list" style="color:var(--accent); margin-right:8px;"></i>Nova Ordem de Serviço</h1>
+        <p>Preencha os dados do problema para abertura da OS</p>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <!-- LOCALIZAÇÃO -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-map-marker-alt"></i> Localização</div>
+        <div class="field-row cols-2">
+          <div class="field">
+            <label>Setor <span class="req">*</span></label>
+            <select id="setor" required>
+              <option value="">Selecione...</option>
+              <option>Recepção</option><option>Quarto</option><option>Suíte</option>
+              <option>Banheiro</option><option>Cozinha</option><option>Restaurante</option>
+              <option>Área de Lazer</option><option>Casas</option><option>Spa</option>
+              <option>Academia</option><option>Salão de Eventos</option><option>Estacionamento</option>
+              <option>Elétrica</option><option>Hidráulica</option><option>Ar Condicionado</option>
+              <option>TV/Internet</option><option>Móveis</option><option>Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Local Específico <span class="req">*</span></label>
+            <input type="text" id="local" required placeholder="Ex: Quarto 203, Cozinha...">
+          </div>
+        </div>
+      </div>
+
+      <!-- PRIORIDADE -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-exclamation-triangle"></i> Prioridade</div>
+        <div class="priority-picker">
+          <div>
+            <input type="radio" name="prioridade" id="p-baixa" value="Baixa" class="priority-option">
+            <label for="p-baixa" class="priority-label pl-baixa">
+              <i class="fas fa-arrow-down"></i> Baixa
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="prioridade" id="p-media" value="Média" class="priority-option" checked>
+            <label for="p-media" class="priority-label pl-media">
+              <i class="fas fa-minus"></i> Média
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="prioridade" id="p-alta" value="Alta" class="priority-option">
+            <label for="p-alta" class="priority-label pl-alta">
+              <i class="fas fa-arrow-up"></i> Alta
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="prioridade" id="p-urgente" value="Urgente" class="priority-option">
+            <label for="p-urgente" class="priority-label pl-urgente">
+              <i class="fas fa-bolt"></i> Urgente
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESCRIÇÃO -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-file-alt"></i> Descrição</div>
+        <div class="field">
+          <label>Descrição do Problema <span class="req">*</span></label>
+          <textarea id="descricao" required placeholder="Descreva detalhadamente o problema encontrado..."></textarea>
+        </div>
+        <div class="field">
+          <label>Solicitante <span class="req">*</span></label>
+          <input type="text" id="solicitante" required placeholder="Seu nome completo">
+        </div>
+        <div class="field">
+          <label>Observações</label>
+          <input type="text" id="observacoes" placeholder="Informações complementares (opcional)">
+        </div>
+      </div>
+
+      <!-- FOTO -->
+      <div class="form-section">
+        <div class="section-label"><i class="fas fa-camera"></i> Foto da Avaria (opcional)</div>
+        <div class="photo-drop" id="photoDrop" onclick="document.getElementById('foto').click()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p id="photoLabel">Clique para adicionar foto</p>
+          <small>JPG, PNG • Máximo 10 MB</small>
+          <img id="preview" alt="Pré-visualização">
+        </div>
+        <input type="file" id="foto" accept="image/*" style="display:none">
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="window.location.href='<?= baseUrl ?>'">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button class="btn btn-primary" id="submitBtn" onclick="enviarOrdem()">
+          <i class="fas fa-paper-plane"></i> Abrir OS
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let fotoBase64 = '';
+
+    document.getElementById('foto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) { showToast('Foto muito grande! Máximo 10 MB.', 'error'); return; }
+      document.getElementById('photoLabel').innerHTML = `<strong>${file.name}</strong> (${(file.size / 1024).toFixed(0)} KB)`;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        fotoBase64 = ev.target.result;
+        const img = document.getElementById('preview');
+        img.src = fotoBase64;
+        img.style.display = 'block';
+        document.getElementById('photoDrop').classList.add('has-photo');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function mostrarLoading(show) {
+      document.getElementById('loading').style.display = show ? 'flex' : 'none';
+    }
+
+    function showToast(msg, tipo = 'default') {
+      const t = document.getElementById('toast');
+      const icons = { success: '✅', error: '❌', default: 'ℹ️' };
+      t.innerHTML = `${icons[tipo] || 'ℹ️'} ${msg}`;
+      t.className = `toast show ${tipo}`;
+      setTimeout(() => t.classList.remove('show'), 4000);
+    }
+
+    function validarCampo(id) {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.classList.add('error');
+        el.addEventListener('input', () => el.classList.remove('error'), { once: true });
+        return false;
+      }
+      return true;
+    }
+
+    function enviarOrdem() {
+      const campos = ['setor', 'local', 'descricao', 'solicitante'];
+      const validos = campos.map(validarCampo);
+      if (validos.includes(false)) {
+        showToast('Preencha todos os campos obrigatórios.', 'error');
+        return;
+      }
+
+      const prioridadeSel = document.querySelector('input[name="prioridade"]:checked');
+      const dados = {
+        setor: document.getElementById('setor').value,
+        local: document.getElementById('local').value,
+        prioridade: prioridadeSel ? prioridadeSel.value : 'Média',
+        descricao: document.getElementById('descricao').value,
+        solicitante: document.getElementById('solicitante').value,
+        observacoes: document.getElementById('observacoes').value,
+        fotoBase64: fotoBase64
+      };
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      mostrarLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          mostrarLoading(false);
+          btn.disabled = false;
+          if (res.success) {
+            showToast(res.message, 'success');
+            // Limpar form
+            document.getElementById('setor').value = '';
+            document.getElementById('local').value = '';
+            document.getElementById('descricao').value = '';
+            document.getElementById('solicitante').value = '';
+            document.getElementById('observacoes').value = '';
+            document.getElementById('preview').style.display = 'none';
+            document.getElementById('photoLabel').textContent = 'Clique para adicionar foto';
+            document.getElementById('photoDrop').classList.remove('has-photo');
+            document.getElementById('foto').value = '';
+            document.querySelector('input[name="prioridade"][value="Média"]').checked = true;
+            fotoBase64 = '';
+            setTimeout(() => window.location.href = '<?= baseUrl ?>', 2500);
+          } else {
+            showToast(res.message || 'Erro ao criar ordem.', 'error');
+          }
+        })
+        .withFailureHandler(function(err) {
+          mostrarLoading(false);
+          btn.disabled = false;
+          showToast('Erro de comunicação: ' + err.message, 'error');
+        })
+        .criarOrdemServico(dados);
+    }
+  </script>
+</body>
+</html>

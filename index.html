@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2128;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #7d8590;
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.25);
+      --green: #16a34a;
+      --orange: #ea580c;
+      --red: #dc2626;
+      --purple: #7c3aed;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37,99,235,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(124,58,237,0.08) 0%, transparent 50%);
+    }
+
+    /* HEADER */
+    .site-header {
+      width: 100%; max-width: 960px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 48px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .brand-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .brand-text h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+    .brand-text p { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .header-badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .header-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .hero h2 {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #e6edf3 0%, #7d8590 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 48px;
+      width: 100%; max-width: 960px;
+    }
+    .stat-item {
+      flex: 1;
+      background: var(--surface);
+      padding: 18px 24px;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .stat-item:hover { background: var(--surface2); }
+    .stat-number {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+      display: block;
+    }
+    .stat-number.accent { color: var(--accent); }
+    .stat-number.green  { color: var(--green); }
+    .stat-number.orange { color: var(--orange); }
+    .stat-number.red    { color: var(--red); }
+    .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-loading { display: inline-block; width: 40px; height: 20px; background: var(--border); border-radius: 4px; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer {
+      0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; }
+    }
+
+    /* GRID DE MÓDULOS */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      width: 100%; max-width: 960px;
+    }
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--card-accent, var(--accent));
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+    .module-card:hover { border-color: var(--card-accent, var(--accent)); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .module-card:hover::before { transform: scaleX(1); }
+    .module-card.--recepcao  { --card-accent: #16a34a; }
+    .module-card.--manutencao { --card-accent: #2563eb; }
+    .module-card.--preventiva { --card-accent: #ea580c; }
+    .module-card.--relatorios { --card-accent: #7c3aed; }
+    .module-card.--config     { --card-accent: #7d8590; }
+
+    .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--icon-bg, rgba(37,99,235,0.15));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      color: var(--card-accent, var(--accent));
+      margin-bottom: 16px;
+    }
+    .module-card.--recepcao  .card-icon { --icon-bg: rgba(22,163,74,0.15); }
+    .module-card.--manutencao .card-icon { --icon-bg: rgba(37,99,235,0.15); }
+    .module-card.--preventiva .card-icon { --icon-bg: rgba(234,88,12,0.15); }
+    .module-card.--relatorios .card-icon { --icon-bg: rgba(124,58,237,0.15); }
+    .module-card.--config     .card-icon { --icon-bg: rgba(125,133,144,0.12); }
+
+    .card-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .card-arrow {
+      position: absolute; right: 20px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--border);
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .module-card:hover .card-arrow {
+      color: var(--card-accent, var(--accent));
+      transform: translateY(-50%) translateX(3px);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      margin-top: 48px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      .hero h2 { font-size: 28px; }
+      .stats-bar { display: grid; grid-template-columns: 1fr 1fr; }
+      .modules-grid { grid-template-columns: 1fr 1fr; }
+      .site-header { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-icon"><i class="fas fa-hotel"></i></div>
+      <div class="brand-text">
+        <h1>Gestão de Manutenção</h1>
+        <p>Sistema Hoteleiro Integrado</p>
+      </div>
+    </div>
+    <div class="header-badge">
+      <span class="dot"></span>
+      <span>Sistema ativo</span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h2>Central de Operações</h2>
+    <p>Gerencie ordens de serviço, preventivas e relatórios do seu hotel em um só lugar.</p>
+  </div>
+
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item">
+      <span class="stat-number accent" id="statPendentes"><span class="stat-loading"></span></span>
+      <div class="stat-label">Pendentes</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number orange" id="statUrgentes"><span class="stat-loading"></span></span>
+      <div class="stat-label">Urgentes</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number green" id="statConcluidos"><span class="stat-loading"></span></span>
+      <div class="stat-label">Concluídas</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" id="statPreventivas"><span class="stat-loading"></span></span>
+      <div class="stat-label">Preventivas</div>
+    </div>
+  </div>
+
+  <div class="modules-grid">
+    <a href="<?= baseUrl ?>?page=recepcao" class="module-card --recepcao">
+      <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+      <div class="card-title">Recepção</div>
+      <div class="card-desc">Abrir nova Ordem de Serviço com foto e prioridade</div>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+    <a href="<?= baseUrl ?>?page=manutencao" class="module-card --manutencao">
+      <div class="card-icon"><i class="fas fa-tools"></i></div>
+      <div class="card-title">Manutenção</div>
+      <div class="card-desc">Gerenciar pendentes, histórico e preventivas agendadas</div>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+    <a href="<?= baseUrl ?>?page=preventiva" class="module-card --preventiva">
+      <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+      <div class="card-title">Preventivas</div>
+      <div class="card-desc">Agendar manutenções com checklist gerado por IA</div>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+    <a href="<?= baseUrl ?>?page=relatorios" class="module-card --relatorios">
+      <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+      <div class="card-title">Relatórios</div>
+      <div class="card-desc">Estatísticas, gráficos e exportação para CSV</div>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+    <a href="<?= baseUrl ?>?page=configuracoes" class="module-card --config">
+      <div class="card-icon"><i class="fas fa-sliders-h"></i></div>
+      <div class="card-title">Configurações</div>
+      <div class="card-desc">Planilha, e-mails e chave API Gemini</div>
+      <i class="fas fa-arrow-right card-arrow"></i>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <i class="fas fa-database" style="font-size:10px;"></i>
+    Planilha: <code style="font-size:11px; color:#7d8590;"><?= CONFIG.SHEET_ID ?></code>
+  </footer>
+
+  <script>
+    // Carrega estatísticas em background
+    if (typeof google !== 'undefined' && google.script) {
+      google.script.run
+        .withSuccessHandler(function(stats) {
+          if (!stats) return;
+          const pendentes = (stats.abertos || 0) + (stats.emAndamento || 0);
+          document.getElementById('statPendentes').textContent = pendentes;
+          document.getElementById('statUrgentes').textContent = stats.porPrioridade?.Urgente || 0;
+          document.getElementById('statConcluidos').textContent = stats.concluidos || 0;
+        })
+        .withFailureHandler(function() {
+          ['statPendentes','statUrgentes','statConcluidos'].forEach(id => {
+            document.getElementById(id).textContent = '—';
+          });
+        })
+        .getEstatisticas();
+
+      google.script.run
+        .withSuccessHandler(function(prev) {
+          document.getElementById('statPreventivas').textContent = (prev || []).length;
+        })
+        .withFailureHandler(function() {
+          document.getElementById('statPreventivas').textContent = '—';
+        })
+        .listarPreventivasAtivas();
+    } else {
+      ['statPendentes','statUrgentes','statConcluidos','statPreventivas'].forEach(id => {
+        document.getElementById(id).textContent = '—';
+      });
+    }
+  </script>
+</body>
+</html>
